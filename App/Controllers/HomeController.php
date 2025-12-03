@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 class HomeController {
-    public static function index() {
+    public function index() {
         echo 'Hello World!';
     }
 }
