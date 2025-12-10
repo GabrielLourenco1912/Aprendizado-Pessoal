@@ -38,7 +38,6 @@ class Router {
                 }
             }
 
-
         } else {
             http_response_code(404);
             echo "404 - Não encontrado";
