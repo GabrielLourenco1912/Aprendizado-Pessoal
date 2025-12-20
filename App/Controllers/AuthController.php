@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Controllers;
+namespace App\Controllers;
 
 class AuthController
 {

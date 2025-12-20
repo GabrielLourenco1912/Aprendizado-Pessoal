@@ -2,13 +2,18 @@
 
 namespace config\routes;
 
-use App\src\Controllers\AuthController;
-use App\src\Controllers\HomeController;
+use App\Controllers\AuthController;
+use App\Controllers\HomeController;
 
 /** @var \App\Core\Router $router */
 
-$router->get('/auth/register', [HomeController::class, 'register']);
-
-$router->get('/auth/login', [AuthController::class, 'login']);
+$router->group(['middleware' => 'guest'], function($r) {;
+    $r->get('/auth/register', [AuthController::class, 'register']);
+    $r->get('/auth/login', [AuthController::class, 'login']);
+});;
 
 $router->get('/', [HomeController::class, 'index']);
+
+$router->group(['middleware' => 'auth'], function($r) {
+    $r->get('/dashboard', [HomeController::class, 'dashboard']);
+});
