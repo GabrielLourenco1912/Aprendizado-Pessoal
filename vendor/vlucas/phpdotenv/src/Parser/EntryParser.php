@@ -282,7 +282,7 @@ final class EntryParser
     }
 
     /**
-     * Generate a friendly error message.
+     * Generate a friendly errors message.
      *
      * @param string $cause
      * @param string $subject

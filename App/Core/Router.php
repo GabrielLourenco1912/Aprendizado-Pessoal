@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Core\Exceptions\HttpException;
+
 class Router {
     private array $routes = [];
     private array $currentMiddlewares = [];
@@ -52,9 +54,7 @@ class Router {
         }
 
         if (!isset($this->routes[$method])) {
-            http_response_code(405);
-            echo "405 - Método não permitido";
-            return;
+            throw new HttpException('Método não permitido', 405);
         }
 
         if (isset($this->routes[$method][$uri])) {
@@ -79,11 +79,10 @@ class Router {
             }
         }
 
-        http_response_code(404);
-        echo "404 - Não encontrado";
+        throw new HttpException('Não encontrado', 404);
     }
 
-    private function executeHandler(array $handler, array $params = []) {
+    private function executeHandler(array $handler, array $urlParams = []) {
         $controllerClass = $handler['handler'][0];
         $controllerMethod = $handler['handler'][1];
 
@@ -111,6 +110,8 @@ class Router {
                     $dependencies[] = $request;
                 } elseif ($typeName === \App\Core\Response::class) {
                     $dependencies[] = $response;
+                } else {
+                    $dependencies[] = $this->resolveClass($typeName);
                 }
             } else {
                 if (!empty($urlParams)) {
@@ -120,6 +121,43 @@ class Router {
         }
 
         $controllerInstance->$controllerMethod(...$dependencies);
+    }
+    private function resolveClass(string $className)
+    {
+        if ($className === \config\database\database::class) {
+            return \config\database\database::getInstance();
+        }
+
+        $reflector = new \ReflectionClass($className);
+
+        if (!$reflector->isInstantiable()) {
+            throw new \Exception("A classe [$className] não pode ser instanciada.");
+        }
+
+        $constructor = $reflector->getConstructor();
+
+        if (is_null($constructor)) {
+            return new $className();
+        }
+
+        $params = $constructor->getParameters();
+        $dependencies = [];
+
+        foreach ($params as $param) {
+            $type = $param->getType();
+
+            if ($type && !$type->isBuiltin()) {
+                $dependencies[] = $this->resolveClass($type->getName());
+            } else {
+                if ($param->isDefaultValueAvailable()) {
+                    $dependencies[] = $param->getDefaultValue();
+                } else {
+                    throw new \Exception("Não foi possível resolver a dependência primitiva da classe $className");
+                }
+            }
+        }
+
+        return $reflector->newInstanceArgs($dependencies);
     }
 
     private function executeMiddleware(array $routeData)

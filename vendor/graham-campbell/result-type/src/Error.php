@@ -30,7 +30,7 @@ final class Error extends Result
     private $value;
 
     /**
-     * Internal constructor for an error value.
+     * Internal constructor for an errors value.
      *
      * @param E $value
      *
@@ -42,7 +42,7 @@ final class Error extends Result
     }
 
     /**
-     * Create a new error value.
+     * Create a new errors value.
      *
      * @template F
      *
@@ -96,7 +96,7 @@ final class Error extends Result
     }
 
     /**
-     * Get the error option value.
+     * Get the errors option value.
      *
      * @return \PhpOption\Option<E>
      */
@@ -106,7 +106,7 @@ final class Error extends Result
     }
 
     /**
-     * Map over the error value.
+     * Map over the errors value.
      *
      * @template F
      *

@@ -24,7 +24,6 @@ final class database
         $this->db      = $_ENV['DB_NAME'];
         $this->user    = $_ENV['DB_USER'];
         $this->pass    = $_ENV['DB_PASS'];
-        $this->charset = $_ENV['DB_CHARSET'];
     }
     public static function getInstance(): self
     {

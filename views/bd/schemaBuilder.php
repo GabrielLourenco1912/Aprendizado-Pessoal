@@ -248,6 +248,43 @@
 </div>
 
 <script>
+
+    function blockPrimaryOptions() {
+
+        const rows = document.querySelectorAll('.col-row');
+
+        function updatePrimaryOptions() {
+            let primaryEmUso = false;
+
+            rows.forEach(row => {
+                const select = row.querySelector('select[name*="[key]"]');
+                if (select.value === 'PRIMARY') {
+                    primaryEmUso = true;
+                }
+            });
+
+            rows.forEach(row => {
+                const select = row.querySelector('select[name*="[key]"]');
+                const optionPrimary = select.querySelector('option[value="PRIMARY"]');
+
+                if (!optionPrimary) return;
+
+                if (primaryEmUso && select.value !== 'PRIMARY') {
+                    optionPrimary.disabled = true;
+                } else {
+                    optionPrimary.disabled = false;
+                }
+            });
+        }
+
+        rows.forEach(row => {
+            const select = row.querySelector('select[name*="[key]"]');
+            select.addEventListener('change', updatePrimaryOptions);
+        });
+
+        updatePrimaryOptions();
+    }
+
     function addColumn() {
         const container = document.getElementById('columnsBody');
         const index = container.children.length;
@@ -322,6 +359,8 @@
         `;
 
         container.appendChild(row);
+
+        blockPrimaryOptions()
     }
 
     function toggleFK(selectElement) {
@@ -335,7 +374,15 @@
 
         const valor = selectElement.value;
 
-        if (valor === 'PRIMARY' || valor === 'FOREIGN') {
+        if (valor === 'PRIMARY') {
+            notNullCheckbox.checked = true;
+
+            notNullCheckbox.onclick = function() { return false; };
+
+            notNullCheckbox.style.opacity = "0.5";
+            notNullCheckbox.style.cursor = "not-allowed";
+            notNullCheckbox.parentNode.title = "Obrigatório para chaves Primárias e Estrangeiras";
+        } else if (valor === 'FOREIGN') {
             notNullCheckbox.checked = true;
 
             aiCheckbox.checked = false;
@@ -350,7 +397,7 @@
 
             aiCheckbox.style.opacity = "0.5";
             aiCheckbox.style.cursor = "not-allowed";
-            aiCheckbox.parentNode.title = "Obrigatóriamente desabilitado para chaves Primárias e Estrangeiras";
+            aiCheckbox.parentNode.title = "Obrigatóriamente desabilitado para chaves strangeiras";
         } else {
             notNullCheckbox.onclick = null;
 
@@ -376,6 +423,7 @@
 
     function removeRow(btn) {
         btn.closest('.col-row').remove();
+        blockPrimaryOptions()
     }
 
     window.onload = () => addColumn();

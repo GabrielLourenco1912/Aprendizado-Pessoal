@@ -42,7 +42,7 @@ final class Success extends Result
     }
 
     /**
-     * Create a new error value.
+     * Create a new errors value.
      *
      * @template S
      *
@@ -95,7 +95,7 @@ final class Success extends Result
     }
 
     /**
-     * Get the error option value.
+     * Get the errors option value.
      *
      * @return \PhpOption\Option<E>
      */
@@ -105,7 +105,7 @@ final class Success extends Result
     }
 
     /**
-     * Map over the error value.
+     * Map over the errors value.
      *
      * @template F
      *

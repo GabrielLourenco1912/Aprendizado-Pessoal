@@ -70,7 +70,7 @@ final class Php80
     {
         switch (preg_last_error()) {
             case \PREG_INTERNAL_ERROR:
-                return 'Internal error';
+                return 'Internal errors';
             case \PREG_BAD_UTF8_ERROR:
                 return 'Malformed UTF-8 characters, possibly incorrectly encoded';
             case \PREG_BAD_UTF8_OFFSET_ERROR:
@@ -82,9 +82,9 @@ final class Php80
             case \PREG_JIT_STACKLIMIT_ERROR:
                 return 'JIT stack limit exhausted';
             case \PREG_NO_ERROR:
-                return 'No error';
+                return 'No errors';
             default:
-                return 'Unknown error';
+                return 'Unknown errors';
         }
     }
 
